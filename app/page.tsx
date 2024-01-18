@@ -5,11 +5,6 @@ import Image from "next/image";
 import BlogCard from "./_components/blog-card";
 import { Container, Stack, Skeleton } from "@chakra-ui/react";
 
-type AuthorType = {
-  _id: String;
-  email: String;
-};
-
 export type PostType = {
   _id: String;
   title: String;
@@ -28,6 +23,7 @@ const Home = () => {
       const result = await response.json();
 
       setPosts(result.posts);
+      console.log(result.posts);
       setLoading(false);
     };
 
@@ -46,7 +42,7 @@ const Home = () => {
             </React.Fragment>
           ) : (
             <React.Fragment>
-              {posts.map((post: PostType) => (
+              {posts?.map((post: PostType) => (
                 <BlogCard post={post} />
               ))}
             </React.Fragment>

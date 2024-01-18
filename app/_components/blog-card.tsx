@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Container, Flex } from "@chakra-ui/react";
+import { Card, CardBody, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { PostType } from "../page";
 
