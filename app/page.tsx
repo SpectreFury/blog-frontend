@@ -6,10 +6,11 @@ import BlogCard from "./_components/blog-card";
 import { Container, Stack, Skeleton } from "@chakra-ui/react";
 
 export type PostType = {
-  _id: String;
-  title: String;
-  author: String;
-  content: String;
+  _id: string;
+  title: string;
+  author: string;
+  content: string;
+  published: boolean;
 };
 
 const Home = () => {
