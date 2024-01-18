@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Textarea, Button, Flex } from "@chakra-ui/react";
+import { useUserStore } from "@/store/userStore";
 
 const CommentInput = ({ postId }: { postId: String }) => {
   const [commentText, setCommentText] = useState("");
+  const { user } = useUserStore();
 
   const saveComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -14,9 +16,13 @@ const CommentInput = ({ postId }: { postId: String }) => {
       },
       body: JSON.stringify({
         text: commentText,
+        creator: user?.email,
         postId,
       }),
     });
+
+    const result = await response.json();
+    console.log(result);
   };
 
   return (
@@ -29,6 +35,7 @@ const CommentInput = ({ postId }: { postId: String }) => {
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
             setCommentText(e.target.value)
           }
+          disabled={user === null ? true : false}
         />
         <Button alignSelf="start" size="sm" type="submit">
           Submit

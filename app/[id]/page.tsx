@@ -35,8 +35,10 @@ const PostPage = () => {
           <span className="text-sm text-neutral-500 ml-2">{post?.author}</span>
           <div className="mt-10 text-lg">{post?.content}</div>
           <Flex mt={200} direction="column">
-            <CommentInput postId={post._id} />
-            <CommentCard />
+            <CommentInput postId={post._id}/>
+            {post.comments?.map((comment) => (
+              <CommentCard comment={comment} />
+            ))}
           </Flex>
         </Flex>
       </Container>

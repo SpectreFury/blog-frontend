@@ -18,9 +18,13 @@ import {
 import { PostType } from "../page";
 import Link from "next/link";
 import { EditIcon } from "@chakra-ui/icons";
+import { useUserStore } from "@/store/userStore";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
+  const { user } = useUserStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -36,12 +40,17 @@ const Dashboard = () => {
     fetchPosts();
   }, []);
 
+  if (!user) {
+    router.push("/");
+    return;
+  }
+
   return (
     <div>
       <Container maxW="1440px">
         <Card maxW={200} mt={10}>
           <CardBody>
-            <Flex direction='column' gap={2}>
+            <Flex direction="column" gap={2}>
               <div>Have something new that you want to share?</div>
               <Link href="/create">
                 <IconButton

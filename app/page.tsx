@@ -5,12 +5,17 @@ import Image from "next/image";
 import BlogCard from "./_components/blog-card";
 import { Container, Stack, Skeleton } from "@chakra-ui/react";
 
+export type CommentType = {
+  text: string;
+};
+
 export type PostType = {
   _id: string;
   title: string;
   author: string;
   content: string;
   published: boolean;
+  comments?: CommentType[];
 };
 
 const Home = () => {
