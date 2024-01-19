@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import BlogCard from "./_components/blog-card";
 import { Container, Stack, Skeleton } from "@chakra-ui/react";
 
@@ -25,13 +24,29 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
-      const response = await fetch("http://localhost:4000/api/post");
-      const result = await response.json();
+      const token = localStorage.getItem("token");
 
-      setPosts(result.posts);
-      console.log(result.posts);
-      setLoading(false);
+      if (!token) {
+        setLoading(true);
+        const response = await fetch("http://localhost:4000/api/post");
+        const result = await response.json();
+
+        setPosts(result.posts);
+        console.log(result.posts);
+        setLoading(false);
+      } else {
+        setLoading(true);
+        const response = await fetch("http://localhost:4000/api/post", {
+          headers: {
+            "x-access-token": token,
+          },
+        });
+        const result = await response.json();
+
+        setPosts(result.posts);
+        console.log(result.posts);
+        setLoading(false);
+      }
     };
 
     fetchPosts();

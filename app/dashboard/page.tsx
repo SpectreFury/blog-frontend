@@ -47,7 +47,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("http://localhost:4000/api/post");
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const response = await fetch("http://localhost:4000/api/post", {
+        headers: {
+          "x-access-token": token,
+        },
+      });
       const result = await response.json();
 
       if (result.status === "successful") {

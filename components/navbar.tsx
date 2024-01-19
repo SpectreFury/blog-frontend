@@ -9,10 +9,11 @@ import { useModalStore } from "@/store/modalStore";
 import { useUserStore, User } from "@/store/userStore";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
+
 const Navbar = () => {
   const router = useRouter();
   const { toggleModal } = useModalStore();
-  const { user, setUser } = useUserStore();
+  const { user, setUser, logout } = useUserStore();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -48,6 +49,14 @@ const Navbar = () => {
                 </Link>
               )}
               <div className="text-sm">{user.email}</div>
+              <Button
+                onClick={logout}
+                colorScheme="red"
+                size="sm"
+                variant="ghost"
+              >
+                Logout
+              </Button>
             </Flex>
           ) : (
             <Button variant="outline" onClick={toggleModal}>
