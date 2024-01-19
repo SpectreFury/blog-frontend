@@ -7,6 +7,7 @@ import { Container, Stack, Skeleton } from "@chakra-ui/react";
 
 export type CommentType = {
   text: string;
+  creator: string;
 };
 
 export type PostType = {

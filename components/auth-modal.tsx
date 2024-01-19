@@ -10,7 +10,7 @@ import {
   Button,
   Input,
   Stack,
-  FormLabel,
+  useToast,
 } from "@chakra-ui/react";
 import { useModalStore } from "@/store/modalStore";
 import { jwtDecode } from "jwt-decode";
@@ -23,6 +23,7 @@ const AuthModal = () => {
   const [password, setPassword] = useState("");
 
   const { setUser } = useUserStore();
+  const toast = useToast();
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,6 +46,11 @@ const AuthModal = () => {
 
       setUser(user.id, user.email, user.isAdmin);
 
+      toast({
+        title: "Logged In",
+        description: "You have successfully logged in",
+        status: "success",
+      });
       toggleModal();
     }
   };
@@ -64,7 +70,14 @@ const AuthModal = () => {
     });
     const result = await response.json();
 
-    console.log(result);
+    if (result.status === "successful") {
+      toast({
+        title: "User created",
+        description:
+          "You have successfully registered with the blog, now login",
+        status: "success",
+      });
+    }
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

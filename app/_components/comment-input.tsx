@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Textarea, Button, Flex } from "@chakra-ui/react";
+import { Textarea, Button, Flex, useToast } from "@chakra-ui/react";
 import { useUserStore } from "@/store/userStore";
+import { usePostStore } from "@/store/postStore";
 
 const CommentInput = ({ postId }: { postId: String }) => {
   const [commentText, setCommentText] = useState("");
   const { user } = useUserStore();
+  const toast = useToast();
+
+  const { addComment } = usePostStore();
 
   const saveComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!user) return;
 
     const response = await fetch("http://localhost:4000/api/comment", {
       method: "POST",
@@ -22,7 +28,17 @@ const CommentInput = ({ postId }: { postId: String }) => {
     });
 
     const result = await response.json();
-    console.log(result);
+    if (result.status === "successful") {
+      addComment({
+        text: commentText,
+        creator: user.email,
+      });
+      toast({
+        title: "Comment Created",
+        description: "The comment has been added",
+        status: "success",
+      });
+    }
   };
 
   return (
