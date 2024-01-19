@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Container, Flex, Divider } from "@chakra-ui/react";
-import { PostType } from "../page";
 import CommentInput from "../_components/comment-input";
 import CommentCard from "../_components/comment-card";
 import { usePostStore } from "@/store/postStore";
@@ -35,7 +34,7 @@ const PostPage = () => {
       <Container maxW="1440px">
         <Flex mt={10} direction="column">
           <h1 className="text-[48px] font-bold">{post?.title}</h1>
-          <span className="text-sm text-neutral-500 ml-2">{post?.author}</span>
+          <span className="text-sm text-neutral-500">{post?.author}</span>
           <div className="mt-10 text-lg">{post?.content}</div>
           <Flex mt={200} direction="column">
             <CommentInput postId={post._id} />

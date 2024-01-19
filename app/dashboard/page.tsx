@@ -14,6 +14,7 @@ import {
   IconButton,
   Card,
   CardBody,
+  Switch,
 } from "@chakra-ui/react";
 import { PostType } from "../page";
 import Link from "next/link";
@@ -25,6 +26,24 @@ const Dashboard = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const { user } = useUserStore();
   const router = useRouter();
+
+  const setPublished = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    post: PostType
+  ) => {
+    const response = await fetch(`http://localhost:4000/api/${post._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        published: e.target.checked,
+        postId: post._id,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -76,7 +95,25 @@ const Dashboard = () => {
                 <Tr>
                   <Td>{post.title}</Td>
                   <Td>{post.author}</Td>
-                  <Td>{post.published ? "True" : "False"}</Td>
+                  <Td>
+                    <Switch
+                      isChecked={post.published}
+                      onChange={(e) => {
+                        setPosts((prev) =>
+                          prev.map((currentPost) => {
+                            if (currentPost._id === post._id) {
+                              setPublished(e, post);
+                              return {
+                                ...currentPost,
+                                published: e.target.checked,
+                              };
+                            }
+                            return currentPost;
+                          })
+                        );
+                      }}
+                    />
+                  </Td>
                 </Tr>
               ))}
             </Tbody>

@@ -9,10 +9,11 @@ interface PostStore {
 
 const usePostStore = create<PostStore>((set) => ({
   post: null,
-  setPost: (post: PostType | null) =>
+  setPost: (post: PostType | null) => {
     set((state) => ({
       post,
-    })),
+    }));
+  },
   addComment: (comment: CommentType) =>
     set((state) => ({
       post: {
