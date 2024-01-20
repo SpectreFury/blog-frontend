@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Input, Flex, Button } from "@chakra-ui/react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/userStore";
+import dynamic from "next/dynamic";
 
 const Create = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  );
 
   const { user } = useUserStore();
 
@@ -71,7 +76,9 @@ const Create = () => {
               onChange={(e) => setAuthor(e.target.value)}
               required
             />
-            <ReactQuill theme="snow" value={value} onChange={setValue} />
+            {typeof window === "object" && (
+              <ReactQuill theme="snow" value={value} onChange={setValue} />
+            )}
             <Button alignSelf="start" colorScheme="green" type="submit">
               Create Post
             </Button>
