@@ -33,18 +33,27 @@ const Dashboard = () => {
   const { user } = useUserStore();
   const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user]);
+
   const deletePost = async (post: PostType) => {
     const token = localStorage.getItem("token");
 
     if (!token) return;
 
-    const response = await fetch(`https://odin-blog-api-nvot.onrender.com/api/${post._id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": token,
-      },
-    });
+    const response = await fetch(
+      `https://odin-blog-api-nvot.onrender.com/api/${post._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      }
+    );
     const result = await response.json();
     if (result.status === "successful") {
       setPosts((prev) =>
@@ -57,16 +66,19 @@ const Dashboard = () => {
     e: React.ChangeEvent<HTMLInputElement>,
     post: PostType
   ) => {
-    const response = await fetch(`https://odin-blog-api-nvot.onrender.com/api/${post._id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        published: e.target.checked,
-        postId: post._id,
-      }),
-    });
+    const response = await fetch(
+      `https://odin-blog-api-nvot.onrender.com/api/${post._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          published: e.target.checked,
+          postId: post._id,
+        }),
+      }
+    );
     const result = await response.json();
     console.log(result);
   };
@@ -76,11 +88,14 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/post", {
-        headers: {
-          "x-access-token": token,
-        },
-      });
+      const response = await fetch(
+        "https://odin-blog-api-nvot.onrender.com/api/post",
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
       const result = await response.json();
 
       if (result.status === "successful") {
@@ -91,11 +106,6 @@ const Dashboard = () => {
 
     fetchPosts();
   }, []);
-
-  if (!user) {
-    router.push("/");
-    return;
-  }
 
   return (
     <div>

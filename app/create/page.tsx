@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Input, Flex, Button } from "@chakra-ui/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -16,6 +16,12 @@ const Create = () => {
 
   const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+    }
+  }, [user]);
+
   const createPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -23,18 +29,21 @@ const Create = () => {
 
     if (!token) return;
 
-    const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": token,
-      },
-      body: JSON.stringify({
-        title,
-        author,
-        content: value,
-      }),
-    });
+    const response = await fetch(
+      "https://odin-blog-api-nvot.onrender.com/api/post",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+        body: JSON.stringify({
+          title,
+          author,
+          content: value,
+        }),
+      }
+    );
 
     const result = await response.json();
 
@@ -42,10 +51,6 @@ const Create = () => {
       router.push("/dashboard");
     }
   };
-
-  if (!user) {
-    router.push("/");
-  }
 
   return (
     <div>
