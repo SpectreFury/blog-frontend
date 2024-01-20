@@ -5,11 +5,14 @@ import { Container, Input, Flex, Button } from "@chakra-ui/react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/userStore";
 
 const Create = () => {
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+
+  const { user } = useUserStore();
 
   const router = useRouter();
 
@@ -20,7 +23,7 @@ const Create = () => {
 
     if (!token) return;
 
-    const response = await fetch("http://localhost:4000/api/post", {
+    const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/post", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,6 +43,10 @@ const Create = () => {
     }
   };
 
+  if (!user) {
+    router.push("/");
+  }
+
   return (
     <div>
       <Container maxW="1440px">
@@ -50,12 +57,14 @@ const Create = () => {
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
             />
             <Input
               type="text"
               placeholder="Author"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
+              required
             />
             <ReactQuill theme="snow" value={value} onChange={setValue} />
             <Button alignSelf="start" colorScheme="green" type="submit">

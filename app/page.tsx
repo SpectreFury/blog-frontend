@@ -16,6 +16,7 @@ export type PostType = {
   content: string;
   published: boolean;
   comments?: CommentType[];
+  createdAt: string;
 };
 
 const Home = () => {
@@ -28,7 +29,9 @@ const Home = () => {
 
       if (!token) {
         setLoading(true);
-        const response = await fetch("http://localhost:4000/api/post");
+        const response = await fetch(
+          "https://odin-blog-api-nvot.onrender.com/api/post"
+        );
         const result = await response.json();
 
         setPosts(result.posts);
@@ -36,11 +39,14 @@ const Home = () => {
         setLoading(false);
       } else {
         setLoading(true);
-        const response = await fetch("http://localhost:4000/api/post", {
-          headers: {
-            "x-access-token": token,
-          },
-        });
+        const response = await fetch(
+          "https://odin-blog-api-nvot.onrender.com/api/post",
+          {
+            headers: {
+              "x-access-token": token,
+            },
+          }
+        );
         const result = await response.json();
 
         setPosts(result.posts);

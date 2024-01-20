@@ -15,23 +15,49 @@ import {
   Card,
   CardBody,
   Switch,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import { PostType } from "../page";
 import Link from "next/link";
 import { EditIcon } from "@chakra-ui/icons";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import moment from "moment";
 
 const Dashboard = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const { user } = useUserStore();
   const router = useRouter();
 
+  const deletePost = async (post: PostType) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const response = await fetch(`https://odin-blog-api-nvot.onrender.com/api/${post._id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      },
+    });
+    const result = await response.json();
+    if (result.status === "successful") {
+      setPosts((prev) =>
+        prev.filter((currentPost) => currentPost._id !== post._id)
+      );
+    }
+  };
+
   const setPublished = async (
     e: React.ChangeEvent<HTMLInputElement>,
     post: PostType
   ) => {
-    const response = await fetch(`http://localhost:4000/api/${post._id}`, {
+    const response = await fetch(`https://odin-blog-api-nvot.onrender.com/api/${post._id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +76,7 @@ const Dashboard = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const response = await fetch("http://localhost:4000/api/post", {
+      const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/post", {
         headers: {
           "x-access-token": token,
         },
@@ -94,7 +120,9 @@ const Dashboard = () => {
               <Tr>
                 <Th>Title</Th>
                 <Th>Author</Th>
+                <Th>Created At</Th>
                 <Th>Published</Th>
+                <Th>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -102,6 +130,7 @@ const Dashboard = () => {
                 <Tr>
                   <Td>{post.title}</Td>
                   <Td>{post.author}</Td>
+                  <Td>{moment(post.createdAt).fromNow()}</Td>
                   <Td>
                     <Switch
                       isChecked={post.published}
@@ -120,6 +149,20 @@ const Dashboard = () => {
                         );
                       }}
                     />
+                  </Td>
+                  <Td>
+                    <Menu>
+                      <MenuButton
+                        size="sm"
+                        as={IconButton}
+                        icon={<ChevronDownIcon />}
+                      ></MenuButton>
+                      <MenuList>
+                        <MenuItem onClick={() => deletePost(post)}>
+                          Delete
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                   </Td>
                 </Tr>
               ))}

@@ -28,7 +28,7 @@ const AuthModal = () => {
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:4000/api/login", {
+    const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const AuthModal = () => {
   const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:4000/api/register", {
+    const response = await fetch("https://odin-blog-api-nvot.onrender.com/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
